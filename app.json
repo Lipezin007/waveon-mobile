@@ -1,0 +1,10 @@
+{
+  "plugins": [
+    "expo-video"
+  ],
+  "extra": {
+    "eas": {
+      "projectId": "c94b4803-369a-4cd1-b56d-a2803b627e84"
+    }
+  }
+}

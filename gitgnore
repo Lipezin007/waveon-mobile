@@ -1,17 +1,8 @@
-# dependências
 node_modules/
-
-# builds
 out/
 dist/
 build/
-
-# arquivos sensíveis
 .env
-
-# sistema
 .DS_Store
 Thumbs.db
-
-# logs
 *.log

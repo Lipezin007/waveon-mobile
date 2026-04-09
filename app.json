@@ -1,10 +1,22 @@
 {
-  "plugins": [
-    "expo-video"
-  ],
-  "extra": {
-    "eas": {
-      "projectId": "c94b4803-369a-4cd1-b56d-a2803b627e84"
+  "expo": {
+    "name": "WaveOn",
+    "slug": "waveon-mobile",
+    "icon": "./assets/images/icon.png",
+    "plugins": [
+      "expo-video"
+    ],
+    "android": {
+      "package": "com.lipezinn.waveonmobile",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c94b4803-369a-4cd1-b56d-a2803b627e84"
+      }
     }
   }
 }

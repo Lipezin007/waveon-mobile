@@ -1,5 +1,17 @@
-node_modules
+# dependências
+node_modules/
+
+# builds
+out/
+dist/
+build/
+
+# arquivos sensíveis
 .env
-.expo
-dist
-build
+
+# sistema
+.DS_Store
+Thumbs.db
+
+# logs
+*.log

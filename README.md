@@ -1,71 +1,122 @@
-# 📱 LifeUp Life - Mobile
 
-Aplicativo mobile do **LifeUp Life**, uma plataforma gamificada focada em desenvolvimento pessoal, onde o usuário evolui habilidades (skills) através de XP, níveis e consistência diária.
+# 🚀 Waveon API
 
----
+Backend da plataforma **Waveon**, uma aplicação fitness completa focada em treinos, nutrição e acompanhamento de progresso.
 
-## ✨ Funcionalidades
-
-- 🔐 Login e autenticação
-- 📊 Sistema de skills com níveis e XP
-- 🎯 Quests diárias
-- 🧠 Registro de atividades
-- 📈 Evolução em tempo real
-- 📡 Integração com API
+Esta API foi desenvolvida para suportar um ambiente real de produção, servindo como base para um app mobile construído em React Native.
 
 ---
 
-## 🛠️ Tecnologias
+## 🧠 Visão do projeto
 
-- React Native / Expo
-- JavaScript
-- Fetch API / Axios
-- AsyncStorage
+A Waveon API centraliza toda a lógica de negócio do sistema, garantindo consistência de dados, segurança e escalabilidade.
+
+O backend foi estruturado para atender um produto real, com foco em:
+
+- organização de código
+- performance
+- facilidade de manutenção
+- evolução contínua do sistema
 
 ---
 
-## 📦 Instalação
+## ⚙️ O que essa API resolve
 
-Clone o repositório:
+A API permite que usuários autenticados possam:
 
+- gerenciar seus treinos personalizados
+- acompanhar sessões e progresso
+- registrar alimentação diária
+- controlar ingestão de água
+- manter histórico estruturado por data
+- sincronizar dados em tempo real com o app
+
+---
+
+## 🛠️ Stack utilizada
+
+- **Node.js**
+- **Express**
+- **MySQL**
+- **JWT (autenticação)**
+- **dotenv**
+- **mysql2**
+
+---
+
+## 🧩 Arquitetura
+
+O projeto segue uma estrutura organizada e modular:
 ```
-git clone https://github.com/Lipezin007/LevelUp-Life.git
+src/
+├── config/ # conexão com banco
+├── controllers/ # regras de negócio
+├── routes/ # definição das rotas
+├── middlewares/ # autenticação e validações
+└── app.js # inicialização da aplicação
 ```
 
-Entre na pasta do mobile:
+Essa separação facilita manutenção, testes e escalabilidade.
 
-cd mobile
+---
+
+## 🔐 Segurança
+
+- autenticação baseada em JWT
+- rotas protegidas por middleware
+- isolamento de dados por usuário
+
+---
+
+## 📱 Integração
+
+Essa API foi construída para funcionar integrada com um aplicativo mobile, garantindo:
+
+- comunicação eficiente via REST
+- respostas otimizadas para UI
+- persistência de dados em tempo real
+- suporte a sessões e estado do usuário
+
+---
+
+## 🚀 Execução
 
 Instale as dependências:
 
+```
 npm install
-▶️ Executando o app
+```
+Inicie o servidor:
 ```
 npm start
 ```
-ou (caso use Expo):
-
-npx expo start
-🔗 Conectando com a API
-
-No código, configure a URL da API:
+Ambiente de desenvolvimento:
 ```
-const API_URL = "http://SEU_IP:3001";
+npx nodemon src/app.js
 ```
-⚠️ Importante:
+💡 Diferenciais
+estrutura pensada para produto real
 
-Para rodar no celular, use o IP da sua máquina na rede local
-```
-Exemplo: http://192.168.0.10:3001
-```
-📱 Preview
+backend desacoplado do frontend
 
-(adicione prints do app aqui depois)
+pronto para escalar (novas features, premium, etc)
 
-🎯 Objetivo
+integração completa com app mobile
 
-O objetivo do app é transformar disciplina e rotina em um sistema gamificado, incentivando evolução constante e hábitos saudáveis.
+modelagem de dados voltada para uso contínuo
+
+📈 Evolução planejada
+metas nutricionais personalizadas
+
+dashboards e analytics
+
+sistema de planos premium
+
+notificações e lembretes
+
+documentação automática (Swagger)
+
+deploy em ambiente cloud
 
 👨‍💻 Autor
-
-Felippe
+Desenvolvido por Felippe Pedroso como projeto real e parte do portfólio profissional.

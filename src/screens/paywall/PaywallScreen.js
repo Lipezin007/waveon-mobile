@@ -9,10 +9,11 @@ import {
 } from 'react-native';
 import api from '../../api/axios';
 import { AuthContext } from '../../contexts/AuthContext';
-import { t } from '../../i18n';
+import { LanguageContext } from '../../contexts/LanguageContext';
 
 export default function PaywallScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
+  const { t } = useContext(LanguageContext);
   const [loading, setLoading] = useState(false);
 
   const isPremium = user?.plan === 'premium';

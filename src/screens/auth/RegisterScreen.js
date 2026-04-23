@@ -17,10 +17,11 @@ import {
 import { VideoView, useVideoPlayer } from 'expo-video';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AuthContext } from '../../contexts/AuthContext';
-import { t } from '../../i18n';
+import { LanguageContext } from '../../contexts/LanguageContext';
 
 export default function RegisterScreen({ navigation }) {
   const { register } = useContext(AuthContext);
+  const { t } = useContext(LanguageContext);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

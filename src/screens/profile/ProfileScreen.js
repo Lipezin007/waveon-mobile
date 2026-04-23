@@ -15,17 +15,20 @@ import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { AuthContext } from '../../contexts/AuthContext';
+import { LanguageContext } from '../../contexts/LanguageContext';
 import api from '../../api/axios';
+import { colors } from '../../theme/colors';
+import { spacing } from '../../theme/spacing';
 
 const AVATAR_KEY = '@waveon_avatar';
 
 export default function ProfileScreen() {
   const { user, setUser, logout } = useContext(AuthContext);
+  const { language, setLanguage, t } = useContext(LanguageContext);
 
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [loading] = useState(false);
-
   const [avatar, setAvatar] = useState(null);
 
   const [form, setForm] = useState({
@@ -64,22 +67,22 @@ export default function ProfileScreen() {
   }
 
   async function pickImage() {
-    const permission =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (!permission.granted) {
-      Alert.alert('Permissão necessária');
+      Alert.alert(t('profile.permissionRequired', 'Permission required'));
       return;
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.7,
+      allowsEditing: true,
+      aspect: [1, 1],
     });
 
     if (!result.canceled) {
       const uri = result.assets[0].uri;
-
       setAvatar(uri);
       await AsyncStorage.setItem(AVATAR_KEY, uri);
     }
@@ -113,7 +116,7 @@ export default function ProfileScreen() {
   async function handleSaveProfile() {
     try {
       if (!form.name.trim()) {
-        Alert.alert('Nome obrigatório');
+        Alert.alert(t('profile.nameRequired', 'Name is required'));
         return;
       }
 
@@ -135,12 +138,12 @@ export default function ProfileScreen() {
       }
 
       setEditing(false);
-      Alert.alert('Salvo com sucesso');
+      Alert.alert(t('profile.saved', 'Saved successfully'));
     } catch (error) {
       console.log('PROFILE ERROR:', error?.response?.data || error);
       Alert.alert(
-        'Erro ao salvar',
-        error?.response?.data?.message || 'Tente novamente.'
+        t('profile.saveError', 'Error saving'),
+        error?.response?.data?.message || t('profile.tryAgain', 'Try again.')
       );
     } finally {
       setSaving(false);
@@ -148,10 +151,18 @@ export default function ProfileScreen() {
   }
 
   function handleLogout() {
-    Alert.alert('Sair', 'Deseja sair da conta?', [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Sair', style: 'destructive', onPress: logout },
-    ]);
+    Alert.alert(
+      t('profile.logoutTitle', 'Sign out'),
+      t('profile.logoutMessage', 'Do you want to sign out?'),
+      [
+        { text: t('common.cancel', 'Cancel'), style: 'cancel' },
+        {
+          text: t('profile.signOut', 'Sign out'),
+          style: 'destructive',
+          onPress: logout,
+        },
+      ]
+    );
   }
 
   function formatDate(date) {
@@ -162,7 +173,7 @@ export default function ProfileScreen() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#6E86BC" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -170,10 +181,16 @@ export default function ProfileScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <LinearGradient
-        colors={['#6E86BC', '#4D618F', '#2A3550']}
+        colors={['#7A91C8', '#5B74AB', '#2F3B58']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
         style={styles.hero}
       >
-        <TouchableOpacity onPress={pickImage}>
+        <TouchableOpacity
+          onPress={pickImage}
+          activeOpacity={0.85}
+          style={styles.avatarWrapper}
+        >
           {avatar ? (
             <Image source={{ uri: avatar }} style={styles.avatarImage} />
           ) : (
@@ -185,15 +202,18 @@ export default function ProfileScreen() {
           )}
         </TouchableOpacity>
 
-        <Text style={styles.name}>{form.name}</Text>
+        <Text style={styles.name}>{form.name || t('profile.user', 'User')}</Text>
         <Text style={styles.email}>{form.email}</Text>
 
         {!editing && (
           <TouchableOpacity
             style={styles.editBtn}
             onPress={() => setEditing(true)}
+            activeOpacity={0.85}
           >
-            <Text style={styles.editBtnText}>Editar</Text>
+            <Text style={styles.editBtnText}>
+              {t('profile.editProfile', 'Edit profile')}
+            </Text>
           </TouchableOpacity>
         )}
       </LinearGradient>
@@ -201,77 +221,150 @@ export default function ProfileScreen() {
       {!editing ? (
         <>
           <View style={styles.row}>
-            <Card label="Peso" value={form.weight ? `${form.weight}kg` : '-'} />
             <Card
-              label="Altura"
-              value={form.height ? `${form.height}cm` : '-'}
+              label={t('profile.weight', 'Weight')}
+              value={form.weight ? `${form.weight} kg` : '-'}
+            />
+            <Card
+              label={t('profile.height', 'Height')}
+              value={form.height ? `${form.height} cm` : '-'}
             />
           </View>
 
           <View style={styles.row}>
-            <Card label="Idade" value={form.age || '-'} />
-            <Card label="Plano" value={form.plan || '-'} />
+            <Card label={t('profile.age', 'Age')} value={form.age || '-'} />
+            <Card label={t('profile.plan', 'Plan')} value={form.plan || '-'} />
           </View>
 
-          <Box title="Perfil">
-            <Item label="Body type" value={form.body_type} />
-            <Item label="Objetivo" value={form.goal} />
+          <Box title={t('profile.profile', 'Profile')}>
+            <Item
+              label={t('profile.bodyType', 'Body type')}
+              value={form.body_type}
+            />
+            <Item label={t('profile.goal', 'Goal')} value={form.goal} />
           </Box>
 
-          <Box title="Conta">
-            <Item label="Email" value={form.email} />
-            <Item label="Criado em" value={formatDate(form.created_at)} />
+          <Box title={t('profile.account', 'Account')}>
+            <Item label={t('common.email', 'Email')} value={form.email} />
+            <Item
+              label={t('profile.createdAt', 'Created at')}
+              value={formatDate(form.created_at)}
+            />
           </Box>
 
-          <TouchableOpacity style={styles.logoutButtonFull} onPress={handleLogout}>
-            <Text style={styles.logoutButtonText}>Sair</Text>
+          <Box title={t('profile.language', 'Language')}>
+            <View style={styles.languageRow}>
+              <TouchableOpacity
+                style={[
+                  styles.languageButton,
+                  language === 'en' && styles.languageButtonActive,
+                ]}
+                onPress={() => setLanguage('en')}
+                activeOpacity={0.85}
+              >
+                <Text
+                  style={[
+                    styles.languageButtonText,
+                    language === 'en' && styles.languageButtonTextActive,
+                  ]}
+                >
+                  English
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.languageButton,
+                  language === 'pt' && styles.languageButtonActive,
+                ]}
+                onPress={() => setLanguage('pt')}
+                activeOpacity={0.85}
+              >
+                <Text
+                  style={[
+                    styles.languageButtonText,
+                    language === 'pt' && styles.languageButtonTextActive,
+                  ]}
+                >
+                  Português
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Box>
+
+          <TouchableOpacity
+            style={styles.logoutButtonFull}
+            onPress={handleLogout}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.logoutButtonText}>
+              {t('profile.signOut', 'Sign out')}
+            </Text>
           </TouchableOpacity>
         </>
       ) : (
-        <Box title="Editar perfil">
+        <Box title={t('profile.editProfile', 'Edit profile')}>
           <Input
-            label="Nome"
+            label={t('profile.name', 'Name')}
             value={form.name}
             onChange={(v) => handleChange('name', v)}
           />
           <Input
-            label="Body type"
+            label={t('profile.bodyType', 'Body type')}
             value={form.body_type}
             onChange={(v) => handleChange('body_type', v)}
           />
           <Input
-            label="Objetivo"
+            label={t('profile.goal', 'Goal')}
             value={form.goal}
             onChange={(v) => handleChange('goal', v)}
           />
           <Input
-            label="Peso"
+            label={t('profile.weight', 'Weight')}
             value={form.weight}
             onChange={(v) => handleChange('weight', v)}
           />
           <Input
-            label="Altura"
+            label={t('profile.height', 'Height')}
             value={form.height}
             onChange={(v) => handleChange('height', v)}
           />
           <Input
-            label="Idade"
+            label={t('profile.age', 'Age')}
             value={form.age}
             onChange={(v) => handleChange('age', v)}
           />
 
           <View style={styles.actionsRow}>
-            <TouchableOpacity style={styles.cancel} onPress={handleCancelEdit}>
-              <Text style={styles.cancelText}>Cancelar</Text>
+            <TouchableOpacity
+              style={styles.cancel}
+              onPress={handleCancelEdit}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.cancelText}>
+                {t('common.cancel', 'Cancel')}
+              </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-              <Text style={styles.logoutButtonText}>Sair</Text>
+            <TouchableOpacity
+              style={styles.logoutButton}
+              onPress={handleLogout}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.logoutButtonText}>
+                {t('profile.signOut', 'Sign out')}
+              </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.save} onPress={handleSaveProfile}>
+            <TouchableOpacity
+              style={styles.save}
+              onPress={handleSaveProfile}
+              activeOpacity={0.85}
+            >
               <Text style={styles.saveText}>
-                {saving ? 'Salvando...' : 'Salvar'}
+                {saving
+                  ? t('common.saving', 'Saving...')
+                  : t('common.save', 'Save')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -310,200 +403,264 @@ function Item({ label, value }) {
 
 function Input({ label, value, onChange }) {
   return (
-    <>
+    <View style={styles.inputGroup}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
         style={styles.input}
         value={value}
         onChangeText={onChange}
-        placeholderTextColor="#888"
+        placeholderTextColor={colors.textSecondary}
       />
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
+    backgroundColor: colors.background,
   },
 
   content: {
-    padding: 20,
+    padding: spacing.xl,
     paddingBottom: 120,
   },
 
   loadingContainer: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
+    backgroundColor: colors.background,
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   hero: {
-    borderRadius: 24,
-    padding: 20,
+    borderRadius: 28,
+    padding: spacing.xl,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: spacing.xl,
+    overflow: 'hidden',
+  },
+
+  avatarWrapper: {
+    marginBottom: spacing.md,
   },
 
   avatar: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: '#fff3',
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    backgroundColor: 'rgba(255,255,255,0.18)',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.18)',
   },
 
   avatarImage: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
+    width: 96,
+    height: 96,
+    borderRadius: 48,
   },
 
   avatarText: {
     color: '#fff',
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: '900',
   },
 
   name: {
     color: '#fff',
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: '900',
-    marginTop: 10,
+    marginTop: spacing.xs,
   },
 
   email: {
-    color: '#ccc',
-    marginBottom: 10,
+    color: 'rgba(255,255,255,0.82)',
+    fontSize: 14,
+    marginTop: 4,
+    marginBottom: spacing.md,
   },
 
   editBtn: {
     backgroundColor: '#fff',
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 10,
+    minHeight: 46,
+    paddingHorizontal: 18,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   editBtnText: {
     fontWeight: '800',
-    color: '#111',
+    color: '#1D2740',
+    fontSize: 14,
   },
 
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: spacing.sm,
+    gap: spacing.sm,
   },
 
   actionsRow: {
     flexDirection: 'row',
-    gap: 8,
-    marginTop: 8,
+    gap: spacing.xs,
+    marginTop: spacing.sm,
   },
 
   card: {
-    backgroundColor: '#121212',
-    width: '48%',
-    padding: 15,
-    borderRadius: 14,
+    flex: 1,
+    backgroundColor: colors.card,
+    padding: spacing.lg,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
 
   cardLabel: {
-    color: '#888',
+    color: colors.textSecondary,
     fontSize: 12,
+    marginBottom: 8,
   },
 
   cardValue: {
-    color: '#fff',
-    fontSize: 16,
+    color: colors.text,
+    fontSize: 18,
     fontWeight: '800',
   },
 
   box: {
-    backgroundColor: '#121212',
-    padding: 15,
-    borderRadius: 14,
-    marginBottom: 10,
+    backgroundColor: colors.card,
+    padding: spacing.lg,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: spacing.sm,
   },
 
   title: {
-    color: '#fff',
-    fontSize: 16,
+    color: colors.text,
+    fontSize: 18,
     fontWeight: '800',
+    marginBottom: spacing.sm,
   },
 
   item: {
-    marginTop: 10,
+    paddingTop: spacing.sm,
+    marginTop: spacing.xs,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.05)',
   },
 
   label: {
-    color: '#8EA2D0',
-    marginBottom: 4,
+    color: colors.primary,
+    marginBottom: 6,
+    fontSize: 13,
+    fontWeight: '700',
   },
 
   value: {
-    color: '#fff',
+    color: colors.text,
+    fontSize: 15,
+  },
+
+  inputGroup: {
+    marginBottom: spacing.sm,
   },
 
   input: {
-    backgroundColor: '#1A1A1A',
-    borderRadius: 10,
-    padding: 10,
-    color: '#fff',
-    marginBottom: 10,
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.md,
+    minHeight: 52,
+    color: colors.text,
+    fontSize: 15,
   },
 
   cancel: {
     flex: 1,
-    backgroundColor: '#222',
-    padding: 12,
-    borderRadius: 10,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 14,
+    borderRadius: 14,
     alignItems: 'center',
   },
 
   cancelText: {
-    color: '#fff',
+    color: colors.text,
     fontWeight: '700',
   },
 
   logoutButton: {
     flex: 1,
-    backgroundColor: '#2A1111',
+    backgroundColor: 'rgba(255,107,107,0.08)',
     borderWidth: 1,
-    borderColor: '#5A2222',
-    padding: 12,
-    borderRadius: 10,
+    borderColor: 'rgba(255,107,107,0.25)',
+    padding: 14,
+    borderRadius: 14,
     alignItems: 'center',
   },
 
   logoutButtonFull: {
-    backgroundColor: '#2A1111',
+    backgroundColor: 'rgba(255,107,107,0.08)',
     borderWidth: 1,
-    borderColor: '#5A2222',
-    padding: 14,
-    borderRadius: 12,
+    borderColor: 'rgba(255,107,107,0.25)',
+    padding: 16,
+    borderRadius: 16,
     alignItems: 'center',
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
 
   logoutButtonText: {
-    color: '#FF6B6B',
+    color: '#FF7D7D',
     fontWeight: '800',
   },
 
   save: {
     flex: 1,
-    backgroundColor: '#6E86BC',
-    padding: 12,
-    borderRadius: 10,
+    backgroundColor: colors.primary,
+    padding: 14,
+    borderRadius: 14,
     alignItems: 'center',
   },
 
   saveText: {
     color: '#fff',
     fontWeight: '800',
+  },
+
+  languageRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 8,
+  },
+
+  languageButton: {
+    flex: 1,
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 14,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+
+  languageButtonActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+
+  languageButtonText: {
+    color: colors.text,
+    fontWeight: '700',
+  },
+
+  languageButtonTextActive: {
+    color: '#FFFFFF',
   },
 });

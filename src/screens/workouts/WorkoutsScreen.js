@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,9 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import api from '../../api/axios';
-import { t } from '../../i18n';
+import { LanguageContext } from '../../contexts/LanguageContext';
+import { colors } from '../../theme/colors';
+import { spacing } from '../../theme/spacing';
 
 const CATEGORIES = [
   'All',
@@ -86,6 +88,7 @@ const TEMPLATE_WORKOUTS = [
 ];
 
 export default function WorkoutsScreen({ navigation }) {
+  const { t } = useContext(LanguageContext);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [search, setSearch] = useState('');
   const [myWorkouts, setMyWorkouts] = useState([]);
@@ -103,17 +106,17 @@ export default function WorkoutsScreen({ navigation }) {
       const response = await api.get('/custom-workouts');
       setMyWorkouts(response.data || []);
     } catch (error) {
-  console.log('CUSTOM WORKOUTS ERROR STATUS:', error?.response?.status);
-  console.log('CUSTOM WORKOUTS ERROR DATA:', error?.response?.data);
-  console.log('CUSTOM WORKOUTS ERROR MESSAGE:', error?.message);
+      console.log('CUSTOM WORKOUTS ERROR STATUS:', error?.response?.status);
+      console.log('CUSTOM WORKOUTS ERROR DATA:', error?.response?.data);
+      console.log('CUSTOM WORKOUTS ERROR MESSAGE:', error?.message);
 
-  Alert.alert(
-    t('common.error', 'Error'),
-    error?.response?.data?.message ||
-      error?.message ||
-      t('workouts.loadError', 'Could not load workouts.')
-  );
-} finally {
+      Alert.alert(
+        t('common.error', 'Error'),
+        error?.response?.data?.message ||
+          error?.message ||
+          t('workouts.loadError', 'Could not load workouts.')
+      );
+    } finally {
       setLoading(false);
     }
   }
@@ -154,11 +157,11 @@ export default function WorkoutsScreen({ navigation }) {
       </Text>
 
       <View style={styles.searchWrapper}>
-        <Ionicons name="search-outline" size={18} color="#8A8A8A" />
+        <Ionicons name="search-outline" size={18} color={colors.textSecondary} />
         <TextInput
           style={styles.searchInput}
           placeholder={t('workouts.search', 'Search workouts')}
-          placeholderTextColor="#8A8A8A"
+          placeholderTextColor={colors.textSecondary}
           value={search}
           onChangeText={setSearch}
         />
@@ -180,6 +183,7 @@ export default function WorkoutsScreen({ navigation }) {
                 active && styles.categoryChipActive,
               ]}
               onPress={() => setSelectedCategory(category)}
+              activeOpacity={0.85}
             >
               <Text
                 style={[
@@ -197,19 +201,22 @@ export default function WorkoutsScreen({ navigation }) {
       <TouchableOpacity
         style={styles.createCard}
         onPress={() => navigation.navigate('CreateWorkout')}
+        activeOpacity={0.85}
       >
         <View style={styles.createIcon}>
-          <Ionicons name="add" size={22} color="#0A0A0A" />
+          <Ionicons name="add" size={22} color={colors.background} />
         </View>
 
         <View style={styles.createTextWrapper}>
-          <Text style={styles.createTitle}>{t('workouts.createTitle', 'Create your own workout')}</Text>
+          <Text style={styles.createTitle}>
+            {t('workouts.createTitle', 'Create your own workout')}
+          </Text>
           <Text style={styles.createText}>
             {t('workouts.createText', 'Build a workout with the exercises you want.')}
           </Text>
         </View>
 
-        <Ionicons name="chevron-forward" size={20} color="#8EA2D0" />
+        <Ionicons name="chevron-forward" size={20} color={colors.primary} />
       </TouchableOpacity>
 
       <View style={styles.sectionHeader}>
@@ -218,7 +225,7 @@ export default function WorkoutsScreen({ navigation }) {
       </View>
 
       {loading ? (
-        <ActivityIndicator color="#8EA2D0" style={{ marginBottom: 20 }} />
+        <ActivityIndicator color={colors.primary} style={{ marginBottom: spacing.lg }} />
       ) : filteredMyWorkouts.length === 0 ? (
         <View style={styles.emptyCard}>
           <Text style={styles.emptyTitle}>{t('workouts.none', 'No workouts found')}</Text>
@@ -238,6 +245,7 @@ export default function WorkoutsScreen({ navigation }) {
                 workout,
               })
             }
+            activeOpacity={0.85}
           >
             <View style={styles.workoutTop}>
               <View>
@@ -245,7 +253,7 @@ export default function WorkoutsScreen({ navigation }) {
                 <Text style={styles.workoutCategory}>{workout.category}</Text>
               </View>
 
-              <Ionicons name="chevron-forward" size={20} color="#8EA2D0" />
+              <Ionicons name="chevron-forward" size={20} color={colors.primary} />
             </View>
 
             <View style={styles.badgesRow}>
@@ -260,15 +268,18 @@ export default function WorkoutsScreen({ navigation }) {
       )}
 
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>{t('workouts.templates', 'Templates')}</Text>
+        <Text style={styles.sectionTitle}>
+          {t('workouts.templates', 'Templates')}
+        </Text>
         <Text style={styles.sectionCount}>{filteredTemplates.length}</Text>
       </View>
 
       {filteredTemplates.map((workout) => (
         <TouchableOpacity
           key={workout.id}
-          style={styles.templateCard}
+          style={styles.workoutCard}
           onPress={() => navigation.navigate('WorkoutDetails', { workout })}
+          activeOpacity={0.85}
         >
           <View style={styles.workoutTop}>
             <View>
@@ -276,7 +287,7 @@ export default function WorkoutsScreen({ navigation }) {
               <Text style={styles.workoutCategory}>{workout.category}</Text>
             </View>
 
-            <Ionicons name="sparkles-outline" size={18} color="#8EA2D0" />
+            <Ionicons name="sparkles-outline" size={18} color={colors.primary} />
           </View>
 
           <View style={styles.badgesRow}>
@@ -299,59 +310,62 @@ export default function WorkoutsScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
+    backgroundColor: colors.background,
   },
   content: {
-    padding: 20,
+    padding: spacing.xl,
     paddingBottom: 120,
   },
   title: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 30,
     fontWeight: '800',
     marginBottom: 6,
+    letterSpacing: -0.6,
   },
   subtitle: {
-    color: '#A8A8A8',
+    color: colors.textSecondary,
     fontSize: 14,
     lineHeight: 20,
-    marginBottom: 18,
+    marginBottom: spacing.lg,
   },
   searchWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#121212',
-    borderRadius: 16,
+    backgroundColor: colors.card,
+    borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#222222',
-    paddingHorizontal: 14,
-    marginBottom: 16,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.md,
+    marginBottom: spacing.md,
+    minHeight: 54,
   },
   searchInput: {
     flex: 1,
-    color: '#FFFFFF',
+    color: colors.text,
     paddingVertical: 14,
     paddingLeft: 10,
+    fontSize: 15,
   },
   categoriesRow: {
     paddingBottom: 6,
-    marginBottom: 14,
-    gap: 10,
+    marginBottom: spacing.md,
+    gap: spacing.sm,
   },
   categoryChip: {
-    backgroundColor: '#121212',
+    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: '#2A2A2A',
-    borderRadius: 14,
+    borderColor: colors.border,
+    borderRadius: 16,
     paddingVertical: 10,
     paddingHorizontal: 14,
   },
   categoryChipActive: {
-    backgroundColor: '#6E86BC',
-    borderColor: '#6E86BC',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   categoryChipText: {
-    color: '#D0D0D0',
+    color: '#D0D7E2',
     fontSize: 13,
     fontWeight: '700',
   },
@@ -359,35 +373,35 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   createCard: {
-    backgroundColor: '#121212',
+    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: '#222222',
-    borderRadius: 22,
-    padding: 18,
+    borderColor: colors.border,
+    borderRadius: 24,
+    padding: spacing.lg,
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 22,
+    marginBottom: spacing.xl,
   },
   createIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#8EA2D0',
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 14,
+    marginRight: spacing.md,
   },
   createTextWrapper: {
     flex: 1,
   },
   createTitle: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 16,
     fontWeight: '800',
     marginBottom: 4,
   },
   createText: {
-    color: '#A8A8A8',
+    color: colors.textSecondary,
     fontSize: 13,
     lineHeight: 18,
   },
@@ -395,86 +409,80 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: spacing.sm,
     marginTop: 4,
   },
   sectionTitle: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 22,
     fontWeight: '800',
+    letterSpacing: -0.4,
   },
   sectionCount: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 14,
     fontWeight: '800',
   },
   workoutCard: {
-    backgroundColor: '#121212',
-    borderRadius: 20,
-    padding: 16,
+    backgroundColor: colors.card,
+    borderRadius: 22,
+    padding: spacing.lg,
     borderWidth: 1,
-    borderColor: '#222222',
-    marginBottom: 12,
-  },
-  templateCard: {
-    backgroundColor: '#121212',
-    borderRadius: 20,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#222222',
-    marginBottom: 12,
+    borderColor: colors.border,
+    marginBottom: spacing.sm,
   },
   workoutTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 14,
+    marginBottom: spacing.md,
+    gap: spacing.sm,
   },
   workoutTitle: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 17,
     fontWeight: '800',
     marginBottom: 4,
   },
   workoutCategory: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 13,
     fontWeight: '700',
   },
   badgesRow: {
     flexDirection: 'row',
-    gap: 10,
+    gap: spacing.sm,
     flexWrap: 'wrap',
   },
   badge: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: 'rgba(255,255,255,0.03)',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#2A2A2A',
+    borderColor: colors.border,
     paddingVertical: 8,
     paddingHorizontal: 12,
   },
   badgeText: {
-    color: '#D8D8D8',
+    color: '#DDE3EE',
     fontSize: 13,
     fontWeight: '600',
   },
   emptyCard: {
-    backgroundColor: '#121212',
-    borderRadius: 20,
-    padding: 18,
+    backgroundColor: colors.card,
+    borderRadius: 22,
+    padding: spacing.lg,
     borderWidth: 1,
-    borderColor: '#222222',
-    marginBottom: 14,
+    borderColor: colors.border,
+    marginBottom: spacing.md,
   },
   emptyTitle: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 16,
     fontWeight: '700',
     marginBottom: 6,
   },
   emptyText: {
-    color: '#A8A8A8',
+    color: colors.textSecondary,
     fontSize: 14,
     lineHeight: 20,
   },

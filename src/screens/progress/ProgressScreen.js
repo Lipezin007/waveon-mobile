@@ -12,6 +12,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import api from '../../api/axios';
+import { colors } from '../../theme/colors';
+import { spacing } from '../../theme/spacing';
 
 export default function ProgressScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
@@ -162,7 +164,7 @@ export default function ProgressScreen({ navigation }) {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#8EA2D0" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -174,7 +176,7 @@ export default function ProgressScreen({ navigation }) {
       showsVerticalScrollIndicator={false}
     >
       <LinearGradient
-        colors={['#6E86BC', '#4D618F', '#2A3550']}
+        colors={['#7A91C8', '#5B74AB', '#2F3B58']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.heroCard}
@@ -246,7 +248,7 @@ export default function ProgressScreen({ navigation }) {
           <TouchableOpacity
             key={session.id}
             style={styles.sessionCard}
-            activeOpacity={0.9}
+            activeOpacity={0.85}
             onPress={() =>
               navigation.navigate('SessionDetails', {
                 sessionId: session.id,
@@ -268,7 +270,7 @@ export default function ProgressScreen({ navigation }) {
                 <Ionicons
                   name="chevron-forward"
                   size={18}
-                  color="#8EA2D0"
+                  color={colors.primary}
                 />
               </View>
             </View>
@@ -296,22 +298,22 @@ export default function ProgressScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
+    backgroundColor: colors.background,
   },
   content: {
-    padding: 20,
+    padding: spacing.xl,
     paddingBottom: 120,
   },
   loadingContainer: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
+    backgroundColor: colors.background,
     justifyContent: 'center',
     alignItems: 'center',
   },
   heroCard: {
     borderRadius: 28,
-    padding: 22,
-    marginBottom: 18,
+    padding: spacing.lg,
+    marginBottom: spacing.lg,
     overflow: 'hidden',
   },
   heroLabel: {
@@ -326,16 +328,17 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: '900',
     marginBottom: 4,
+    letterSpacing: -1,
   },
   heroSubtitle: {
     color: 'rgba(255,255,255,0.9)',
     fontSize: 16,
     fontWeight: '600',
-    marginBottom: 18,
+    marginBottom: spacing.lg,
   },
   heroStatsRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: spacing.sm,
   },
   heroStat: {
     flex: 1,
@@ -357,58 +360,60 @@ const styles = StyleSheet.create({
   statsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 14,
+    marginBottom: spacing.sm,
+    gap: spacing.sm,
   },
   statCard: {
-    width: '48%',
-    backgroundColor: '#121212',
+    flex: 1,
+    backgroundColor: colors.card,
     borderRadius: 22,
-    padding: 16,
+    padding: spacing.md,
     borderWidth: 1,
-    borderColor: '#222222',
+    borderColor: colors.border,
   },
   statLabel: {
-    color: '#9C9C9C',
+    color: colors.textSecondary,
     fontSize: 13,
     marginBottom: 10,
   },
   statValue: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 26,
     fontWeight: '800',
   },
   statFoot: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 13,
     fontWeight: '700',
     marginTop: 4,
   },
   chartCard: {
-    backgroundColor: '#121212',
+    backgroundColor: colors.card,
     borderRadius: 24,
-    padding: 18,
+    padding: spacing.lg,
     borderWidth: 1,
-    borderColor: '#222222',
-    marginBottom: 18,
+    borderColor: colors.border,
+    marginBottom: spacing.lg,
   },
   sectionTitle: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 22,
     fontWeight: '800',
-    marginBottom: 12,
+    marginBottom: spacing.sm,
+    letterSpacing: -0.4,
   },
   chartRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    marginTop: 8,
+    marginTop: spacing.xs,
   },
   chartItem: {
     alignItems: 'center',
     width: '13%',
   },
   chartValue: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 12,
     fontWeight: '700',
     marginBottom: 6,
@@ -417,28 +422,28 @@ const styles = StyleSheet.create({
     width: 18,
     height: 92,
     borderRadius: 999,
-    backgroundColor: '#1A1A1A',
+    backgroundColor: 'rgba(255,255,255,0.05)',
     justifyContent: 'flex-end',
     overflow: 'hidden',
     marginBottom: 8,
   },
   chartBar: {
     width: '100%',
-    backgroundColor: '#6E86BC',
+    backgroundColor: colors.primary,
     borderRadius: 999,
   },
   chartLabel: {
-    color: '#A8A8A8',
+    color: colors.textSecondary,
     fontSize: 11,
     fontWeight: '700',
   },
   sessionCard: {
-    backgroundColor: '#121212',
+    backgroundColor: colors.card,
     borderRadius: 24,
-    padding: 18,
+    padding: spacing.lg,
     borderWidth: 1,
-    borderColor: '#222222',
-    marginBottom: 12,
+    borderColor: colors.border,
+    marginBottom: spacing.sm,
   },
   sessionTop: {
     flexDirection: 'row',
@@ -446,13 +451,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sessionTitle: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 18,
     fontWeight: '800',
     marginBottom: 6,
   },
   sessionDate: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 13,
     fontWeight: '700',
   },
@@ -460,44 +465,46 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#1A2238',
+    backgroundColor: 'rgba(110,134,188,0.12)',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(110,134,188,0.18)',
   },
   badgesRow: {
     flexDirection: 'row',
-    gap: 10,
-    marginTop: 16,
+    gap: spacing.sm,
+    marginTop: spacing.md,
     flexWrap: 'wrap',
   },
   badge: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: 'rgba(255,255,255,0.03)',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#2A2A2A',
+    borderColor: colors.border,
     paddingVertical: 8,
     paddingHorizontal: 12,
   },
   badgeText: {
-    color: '#D8D8D8',
+    color: '#DDE3EE',
     fontSize: 13,
     fontWeight: '600',
   },
   emptyCard: {
-    backgroundColor: '#121212',
+    backgroundColor: colors.card,
     borderRadius: 24,
-    padding: 18,
+    padding: spacing.lg,
     borderWidth: 1,
-    borderColor: '#222222',
+    borderColor: colors.border,
   },
   emptyTitle: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 18,
     fontWeight: '700',
-    marginBottom: 8,
+    marginBottom: spacing.xs,
   },
   emptyText: {
-    color: '#A8A8A8',
+    color: colors.textSecondary,
     fontSize: 14,
     lineHeight: 20,
   },

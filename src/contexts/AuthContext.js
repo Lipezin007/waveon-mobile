@@ -14,10 +14,11 @@ export function AuthProvider({ children }) {
 
   async function loadStorage() {
     try {
+      const rememberMe = await AsyncStorage.getItem('rememberMe');
       const storedToken = await AsyncStorage.getItem('token');
       const storedUser = await AsyncStorage.getItem('user');
 
-      if (storedToken && storedUser) {
+      if (rememberMe === 'true' && storedToken && storedUser) {
         api.defaults.headers.common.Authorization = `Bearer ${storedToken}`;
         setUser(JSON.parse(storedUser));
       }
@@ -28,16 +29,23 @@ export function AuthProvider({ children }) {
     }
   }
 
-  async function login(email, password) {
+  async function login(email, password, rememberMe = false) {
     try {
       const response = await api.post('/auth/login', { email, password });
       const { token, user } = response.data;
 
-      await AsyncStorage.setItem('token', token);
-      await AsyncStorage.setItem('user', JSON.stringify(user));
-
       api.defaults.headers.common.Authorization = `Bearer ${token}`;
       setUser(user);
+
+      if (rememberMe) {
+        await AsyncStorage.setItem('token', token);
+        await AsyncStorage.setItem('user', JSON.stringify(user));
+        await AsyncStorage.setItem('rememberMe', 'true');
+      } else {
+        await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('user');
+        await AsyncStorage.setItem('rememberMe', 'false');
+      }
 
       return response.data;
     } catch (error) {
@@ -48,7 +56,6 @@ export function AuthProvider({ children }) {
   async function register(name, email, password) {
     try {
       await api.post('/auth/register', { name, email, password });
-      await login(email, password);
     } catch (error) {
       throw error;
     }
@@ -58,6 +65,7 @@ export function AuthProvider({ children }) {
     try {
       await AsyncStorage.removeItem('token');
       await AsyncStorage.removeItem('user');
+      await AsyncStorage.removeItem('rememberMe');
 
       delete api.defaults.headers.common.Authorization;
       setUser(null);
@@ -69,7 +77,11 @@ export function AuthProvider({ children }) {
   async function updateStoredUser(newUser) {
     try {
       setUser(newUser);
-      await AsyncStorage.setItem('user', JSON.stringify(newUser));
+
+      const rememberMe = await AsyncStorage.getItem('rememberMe');
+      if (rememberMe === 'true') {
+        await AsyncStorage.setItem('user', JSON.stringify(newUser));
+      }
     } catch (error) {
       console.log('ERRO AO ATUALIZAR USER:', error);
     }

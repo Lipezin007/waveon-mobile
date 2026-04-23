@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import api from '../../api/axios';
+import { colors } from '../../theme/colors';
+import { spacing } from '../../theme/spacing';
 
 export default function SessionDetailsScreen({ route }) {
   const { sessionId, session } = route.params || {};
@@ -59,7 +61,7 @@ export default function SessionDetailsScreen({ route }) {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#8EA2D0" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -71,7 +73,7 @@ export default function SessionDetailsScreen({ route }) {
       showsVerticalScrollIndicator={false}
     >
       <LinearGradient
-        colors={['#6E86BC', '#4D618F', '#2A3550']}
+        colors={['#7A91C8', '#5B74AB', '#2F3B58']}
         style={styles.heroCard}
       >
         <Text style={styles.heroLabel}>SESSION DETAILS</Text>
@@ -134,22 +136,22 @@ export default function SessionDetailsScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
+    backgroundColor: colors.background,
   },
   content: {
-    padding: 20,
+    padding: spacing.xl,
     paddingBottom: 120,
   },
   loadingContainer: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
+    backgroundColor: colors.background,
     justifyContent: 'center',
     alignItems: 'center',
   },
   heroCard: {
     borderRadius: 28,
-    padding: 22,
-    marginBottom: 18,
+    padding: spacing.lg,
+    marginBottom: spacing.lg,
     overflow: 'hidden',
   },
   heroLabel: {
@@ -164,16 +166,17 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '900',
     marginBottom: 6,
+    letterSpacing: -0.5,
   },
   heroSubtitle: {
     color: 'rgba(255,255,255,0.9)',
     fontSize: 15,
     fontWeight: '600',
-    marginBottom: 18,
+    marginBottom: spacing.lg,
   },
   heroStatsRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: spacing.sm,
   },
   heroStat: {
     flex: 1,
@@ -193,58 +196,61 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   sectionTitle: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 22,
     fontWeight: '800',
-    marginBottom: 12,
+    marginBottom: spacing.sm,
+    letterSpacing: -0.4,
   },
   exerciseCard: {
-    backgroundColor: '#121212',
+    backgroundColor: colors.card,
     borderRadius: 22,
-    padding: 16,
+    padding: spacing.md,
     borderWidth: 1,
-    borderColor: '#222222',
-    marginBottom: 12,
+    borderColor: colors.border,
+    marginBottom: spacing.sm,
   },
   exerciseIndex: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 12,
     fontWeight: '700',
     marginBottom: 6,
   },
   exerciseName: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 17,
     fontWeight: '800',
-    marginBottom: 12,
+    marginBottom: spacing.sm,
   },
   badge: {
     alignSelf: 'flex-start',
-    backgroundColor: '#1A2238',
+    backgroundColor: 'rgba(110,134,188,0.12)',
     borderRadius: 12,
     paddingVertical: 8,
     paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(110,134,188,0.18)',
   },
   badgeText: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 12,
     fontWeight: '800',
   },
   emptyCard: {
-    backgroundColor: '#121212',
+    backgroundColor: colors.card,
     borderRadius: 24,
-    padding: 18,
+    padding: spacing.lg,
     borderWidth: 1,
-    borderColor: '#222222',
+    borderColor: colors.border,
   },
   emptyTitle: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 18,
     fontWeight: '700',
-    marginBottom: 8,
+    marginBottom: spacing.xs,
   },
   emptyText: {
-    color: '#A8A8A8',
+    color: colors.textSecondary,
     fontSize: 14,
     lineHeight: 20,
   },

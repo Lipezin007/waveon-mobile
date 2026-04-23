@@ -1,4 +1,5 @@
-import { View } from 'react-native';
+import { useContext } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -8,12 +9,16 @@ import WorkoutsScreen from '../screens/workouts/WorkoutsScreen';
 import ProgressScreen from '../screens/progress/ProgressScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import NutritionScreen from '../screens/nutrition/NutritionScreen';
-import { t } from '../i18n';
+import { LanguageContext } from '../contexts/LanguageContext';
+import { colors } from '../theme/colors';
+import { spacing } from '../theme/spacing';
+
 
 const Tab = createBottomTabNavigator();
 
 export default function MainTabNavigator() {
   const insets = useSafeAreaInsets();
+  const { t } = useContext(LanguageContext);
 
   return (
     <Tab.Navigator
@@ -22,18 +27,18 @@ export default function MainTabNavigator() {
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         sceneStyle: {
-          backgroundColor: '#0A0A0A',
+          backgroundColor: colors.background,
         },
         tabBarStyle: {
           position: 'absolute',
-          left: 16,
-          right: 16,
+          left: spacing.md,
+          right: spacing.md,
           bottom: insets.bottom > 0 ? 10 : 14,
           height: 68,
-          borderRadius: 22,
-          backgroundColor: 'rgba(18,18,18,0.98)',
+          borderRadius: 24,
+          backgroundColor: 'rgba(17,21,28,0.98)',
           borderTopWidth: 1,
-          borderColor: '#1E1E1E',
+          borderColor: colors.border,
           paddingHorizontal: 10,
           paddingTop: 8,
           paddingBottom: 8,
@@ -43,46 +48,34 @@ export default function MainTabNavigator() {
           shadowRadius: 16,
           elevation: 20,
         },
-        tabBarActiveTintColor: '#8EA2D0',
-        tabBarInactiveTintColor: '#6F6F6F',
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: '#6F7785',
         tabBarIcon: ({ color, focused }) => {
           let iconName = 'ellipse-outline';
 
-            if (route.name === 'Home') {
-              iconName = focused ? 'home' : 'home-outline';
-            } else if (route.name === 'Workouts') {
-              iconName = focused ? 'barbell' : 'barbell-outline';
-            } else if (route.name === 'Progress') {
-              iconName = focused ? 'stats-chart' : 'stats-chart-outline';
-            } else if (route.name === 'Nutrition') {
-              iconName = focused ? 'restaurant' : 'restaurant-outline';
-            } else if (route.name === 'Profile') {
-              iconName = focused ? 'person' : 'person-outline';
-            }
+          if (route.name === 'Home') {
+            iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'Workouts') {
+            iconName = focused ? 'barbell' : 'barbell-outline';
+          } else if (route.name === 'Progress') {
+            iconName = focused ? 'stats-chart' : 'stats-chart-outline';
+          } else if (route.name === 'Nutrition') {
+            iconName = focused ? 'restaurant' : 'restaurant-outline';
+          } else if (route.name === 'Profile') {
+            iconName = focused ? 'person' : 'person-outline';
+          }
 
-            return (
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 44,
-                  height: 44,
-                  borderRadius: 22,
-
-                  // 👇 destaque só quando ativo
-                  backgroundColor: focused
-                    ? 'rgba(142,162,208,0.12)'
-                    : 'transparent',
-                  borderWidth: focused ? 1 : 0,
-                  borderColor: 'rgba(142,162,208,0.25)',
-
-                  transform: [{ scale: focused ? 1.08 : 1 }],
-                }}
-              >
-                <Ionicons name={iconName} size={22} color={color} />
-              </View>
-            );
-          },
+          return (
+            <View
+              style={[
+                styles.iconWrapper,
+                focused && styles.iconWrapperActive,
+              ]}
+            >
+              <Ionicons name={iconName} size={22} color={color} />
+            </View>
+          );
+        },
       })}
     >
       <Tab.Screen
@@ -113,3 +106,20 @@ export default function MainTabNavigator() {
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  iconWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'transparent',
+  },
+  iconWrapperActive: {
+    backgroundColor: 'rgba(110,134,188,0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(110,134,188,0.22)',
+    transform: [{ scale: 1.05 }],
+  },
+});

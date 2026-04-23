@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import api from '../../api/axios';
+import { colors } from '../../theme/colors';
+import { spacing } from '../../theme/spacing';
 
 const CATEGORIES = [
   'Push',
@@ -105,7 +107,7 @@ export default function CreateWorkoutScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholder="Example: Push Day"
-          placeholderTextColor="#8A8A8A"
+          placeholderTextColor={colors.textSecondary}
           value={name}
           onChangeText={setName}
         />
@@ -127,6 +129,7 @@ export default function CreateWorkoutScreen({ navigation }) {
                   active && styles.categoryChipActive,
                 ]}
                 onPress={() => setSelectedCategory(category)}
+                activeOpacity={0.85}
               >
                 <Text
                   style={[
@@ -149,13 +152,17 @@ export default function CreateWorkoutScreen({ navigation }) {
           <TextInput
             style={styles.exerciseInput}
             placeholder="Example: Bench Press"
-            placeholderTextColor="#8A8A8A"
+            placeholderTextColor={colors.textSecondary}
             value={exerciseName}
             onChangeText={setExerciseName}
           />
 
-          <TouchableOpacity style={styles.addButton} onPress={handleAddExercise}>
-            <Ionicons name="add" size={20} color="#0A0A0A" />
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={handleAddExercise}
+            activeOpacity={0.85}
+          >
+            <Ionicons name="add" size={20} color={colors.background} />
           </TouchableOpacity>
         </View>
 
@@ -166,7 +173,7 @@ export default function CreateWorkoutScreen({ navigation }) {
         ) : (
           exercises.map((exercise, index) => (
             <View key={exercise.id} style={styles.exerciseItem}>
-              <View>
+              <View style={{ flex: 1, paddingRight: spacing.sm }}>
                 <Text style={styles.exerciseIndex}>Exercise {index + 1}</Text>
                 <Text style={styles.exerciseName}>{exercise.name}</Text>
               </View>
@@ -174,6 +181,7 @@ export default function CreateWorkoutScreen({ navigation }) {
               <TouchableOpacity
                 style={styles.removeButton}
                 onPress={() => handleRemoveExercise(exercise.id)}
+                activeOpacity={0.85}
               >
                 <Ionicons name="trash-outline" size={18} color="#FF7A7A" />
               </TouchableOpacity>
@@ -186,6 +194,7 @@ export default function CreateWorkoutScreen({ navigation }) {
         style={[styles.saveButton, saving && styles.saveButtonDisabled]}
         onPress={handleSaveWorkout}
         disabled={saving}
+        activeOpacity={0.85}
       >
         <Text style={styles.saveButtonText}>
           {saving ? 'Saving...' : 'Save workout'}
@@ -198,65 +207,67 @@ export default function CreateWorkoutScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
+    backgroundColor: colors.background,
   },
   content: {
-    padding: 20,
+    padding: spacing.xl,
     paddingBottom: 120,
   },
   title: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 30,
     fontWeight: '800',
     marginBottom: 6,
+    letterSpacing: -0.6,
   },
   subtitle: {
-    color: '#A8A8A8',
+    color: colors.textSecondary,
     fontSize: 14,
     lineHeight: 20,
-    marginBottom: 18,
+    marginBottom: spacing.lg,
   },
   card: {
-    backgroundColor: '#121212',
+    backgroundColor: colors.card,
     borderRadius: 22,
-    padding: 18,
+    padding: spacing.lg,
     borderWidth: 1,
-    borderColor: '#222222',
-    marginBottom: 16,
+    borderColor: colors.border,
+    marginBottom: spacing.md,
   },
   label: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 14,
     fontWeight: '700',
     marginBottom: 10,
   },
   input: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: 'rgba(255,255,255,0.03)',
     borderWidth: 1,
-    borderColor: '#2A2A2A',
+    borderColor: colors.border,
     borderRadius: 16,
     paddingHorizontal: 14,
     paddingVertical: 14,
-    color: '#FFFFFF',
-    marginBottom: 14,
+    color: colors.text,
+    marginBottom: spacing.md,
+    fontSize: 15,
   },
   categoriesRow: {
-    gap: 10,
+    gap: spacing.sm,
   },
   categoryChip: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: 'rgba(255,255,255,0.03)',
     borderWidth: 1,
-    borderColor: '#2A2A2A',
+    borderColor: colors.border,
     borderRadius: 14,
     paddingVertical: 10,
     paddingHorizontal: 14,
   },
   categoryChipActive: {
-    backgroundColor: '#6E86BC',
-    borderColor: '#6E86BC',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   categoryChipText: {
-    color: '#D0D0D0',
+    color: '#D0D7E2',
     fontSize: 13,
     fontWeight: '700',
   },
@@ -266,57 +277,58 @@ const styles = StyleSheet.create({
   addExerciseRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 14,
+    marginBottom: spacing.md,
   },
   exerciseInput: {
     flex: 1,
-    backgroundColor: '#1A1A1A',
+    backgroundColor: 'rgba(255,255,255,0.03)',
     borderWidth: 1,
-    borderColor: '#2A2A2A',
+    borderColor: colors.border,
     borderRadius: 16,
     paddingHorizontal: 14,
     paddingVertical: 14,
-    color: '#FFFFFF',
-    marginRight: 10,
+    color: colors.text,
+    marginRight: spacing.sm,
+    fontSize: 15,
   },
   addButton: {
     width: 48,
     height: 48,
     borderRadius: 14,
-    backgroundColor: '#8EA2D0',
+    backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
   emptyBox: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: 'rgba(255,255,255,0.03)',
     borderRadius: 16,
-    padding: 16,
+    padding: spacing.md,
     borderWidth: 1,
-    borderColor: '#2A2A2A',
+    borderColor: colors.border,
   },
   emptyText: {
-    color: '#8A8A8A',
+    color: colors.textSecondary,
     fontSize: 14,
   },
   exerciseItem: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: 'rgba(255,255,255,0.03)',
     borderRadius: 16,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#2A2A2A',
-    marginBottom: 10,
+    borderColor: colors.border,
+    marginBottom: spacing.sm,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   exerciseIndex: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 12,
     fontWeight: '700',
     marginBottom: 4,
   },
   exerciseName: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 15,
     fontWeight: '700',
   },
@@ -324,7 +336,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   saveButton: {
-    backgroundColor: '#6E86BC',
+    backgroundColor: colors.primary,
     paddingVertical: 17,
     borderRadius: 18,
     alignItems: 'center',

@@ -14,6 +14,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AuthContext } from '../../contexts/AuthContext';
 import api from '../../api/axios';
+import { colors } from '../../theme/colors';
+import { spacing } from '../../theme/spacing';
 
 const ACTIVE_WORKOUT_KEY = '@waveon_active_workout';
 
@@ -49,7 +51,6 @@ export default function HomeScreen({ navigation }) {
   async function loadHomeData() {
     try {
       setLoading(true);
-
       const response = await api.get('/progress/workout-sessions');
       setSessions(response.data || []);
     } catch (error) {
@@ -174,7 +175,6 @@ export default function HomeScreen({ navigation }) {
       0
     );
 
-    const totalWorkouts = sessions.length;
     const currentStreak = calculateCurrentStreak(sessions);
 
     const weekAgo = new Date();
@@ -187,7 +187,6 @@ export default function HomeScreen({ navigation }) {
     return {
       lastWorkout,
       totalMinutes,
-      totalWorkouts,
       currentStreak,
       weeklyWorkouts,
     };
@@ -211,7 +210,7 @@ export default function HomeScreen({ navigation }) {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#8EA2D0" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -234,7 +233,7 @@ export default function HomeScreen({ navigation }) {
       </View>
 
       <LinearGradient
-        colors={['#6E86BC', '#4D618F', '#2A3550']}
+        colors={['#7A91C8', '#5B74AB', '#2F3B58']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.heroCard}
@@ -254,6 +253,7 @@ export default function HomeScreen({ navigation }) {
           onPress={() =>
             activeWorkout ? handleResumeWorkout() : navigation.navigate('Workouts')
           }
+          activeOpacity={0.85}
         >
           <Text style={styles.heroButtonText}>
             {activeWorkout ? 'Resume workout' : 'Start workout'}
@@ -280,9 +280,9 @@ export default function HomeScreen({ navigation }) {
       </Text>
 
       {activeWorkout ? (
-        <View style={styles.activeWorkoutHomeCard}>
+        <View style={styles.card}>
           <View style={styles.activeWorkoutTop}>
-            <View>
+            <View style={{ flex: 1 }}>
               <Text style={styles.lastWorkoutTitle}>
                 {activeWorkout.workoutName || 'Workout in progress'}
               </Text>
@@ -299,12 +299,13 @@ export default function HomeScreen({ navigation }) {
           <TouchableOpacity
             style={styles.secondaryButton}
             onPress={handleResumeWorkout}
+            activeOpacity={0.85}
           >
             <Text style={styles.secondaryButtonText}>Resume workout</Text>
           </TouchableOpacity>
         </View>
       ) : homeStats.lastWorkout ? (
-        <View style={styles.lastWorkoutCard}>
+        <View style={styles.card}>
           <View style={styles.lastWorkoutTop}>
             <View>
               <Text style={styles.lastWorkoutTitle}>
@@ -335,12 +336,13 @@ export default function HomeScreen({ navigation }) {
           <TouchableOpacity
             style={styles.secondaryButton}
             onPress={() => navigation.navigate('Progress')}
+            activeOpacity={0.85}
           >
             <Text style={styles.secondaryButtonText}>View progress</Text>
           </TouchableOpacity>
         </View>
       ) : (
-        <View style={styles.emptyCard}>
+        <View style={styles.card}>
           <Text style={styles.emptyTitle}>No workouts yet</Text>
           <Text style={styles.emptyText}>
             Complete your first workout to start building your progress.
@@ -349,7 +351,7 @@ export default function HomeScreen({ navigation }) {
       )}
 
       <LinearGradient
-        colors={['rgba(142,162,208,0.16)', 'rgba(142,162,208,0.04)']}
+        colors={['rgba(110,134,188,0.16)', 'rgba(110,134,188,0.05)']}
         style={styles.tipCard}
       >
         <Text style={styles.tipLabel}>Today’s focus</Text>
@@ -365,143 +367,152 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
+    backgroundColor: colors.background,
   },
   content: {
-    padding: 20,
+    padding: spacing.xl,
   },
   loadingContainer: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
+    backgroundColor: colors.background,
     justifyContent: 'center',
     alignItems: 'center',
   },
   header: {
-    marginBottom: 18,
+    marginBottom: spacing.xl,
+    paddingTop: spacing.xs,
   },
   greeting: {
-    color: '#FFFFFF',
-    fontSize: 30,
+    color: colors.text,
+    fontSize: 32,
     fontWeight: '800',
-    marginBottom: 6,
+    marginBottom: spacing.xs,
+    letterSpacing: -0.8,
   },
   subtitle: {
-    color: '#A8A8A8',
-    fontSize: 14,
-    lineHeight: 20,
+    color: colors.textSecondary,
+    fontSize: 15,
+    lineHeight: 22,
+    maxWidth: 320,
   },
   heroCard: {
-    borderRadius: 28,
-    padding: 22,
-    marginBottom: 18,
+    borderRadius: 30,
+    padding: spacing.xl,
+    marginBottom: spacing.lg,
     overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOpacity: 0.22,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 8,
   },
   heroSmall: {
-    color: 'rgba(255,255,255,0.78)',
-    fontSize: 12,
+    color: 'rgba(255,255,255,0.75)',
+    fontSize: 11,
     fontWeight: '800',
-    letterSpacing: 1.5,
-    marginBottom: 12,
+    letterSpacing: 1.8,
+    marginBottom: spacing.sm,
   },
   heroTitle: {
     color: '#FFFFFF',
-    fontSize: 38,
+    fontSize: 40,
     fontWeight: '900',
-    marginBottom: 4,
+    marginBottom: 2,
+    letterSpacing: -1,
   },
   heroSubtitle: {
     color: '#FFFFFF',
     fontSize: 18,
     fontWeight: '700',
-    marginBottom: 10,
+    marginBottom: spacing.sm,
   },
   heroText: {
-    color: 'rgba(255,255,255,0.85)',
+    color: 'rgba(255,255,255,0.84)',
     fontSize: 14,
-    lineHeight: 20,
-    marginBottom: 18,
-    maxWidth: 280,
+    lineHeight: 21,
+    marginBottom: spacing.lg,
+    maxWidth: 290,
   },
   heroButton: {
     backgroundColor: '#FFFFFF',
-    paddingVertical: 15,
-    borderRadius: 16,
+    minHeight: 54,
+    borderRadius: 18,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   heroButtonText: {
     color: '#2A3550',
     fontSize: 15,
     fontWeight: '800',
+    letterSpacing: 0.2,
   },
   statsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 14,
+    marginBottom: spacing.lg,
+    gap: spacing.sm,
   },
   statCard: {
-    width: '48%',
-    backgroundColor: '#121212',
-    borderRadius: 22,
-    padding: 16,
+    flex: 1,
+    backgroundColor: colors.card,
+    borderRadius: 24,
+    padding: spacing.lg,
     borderWidth: 1,
-    borderColor: '#222222',
+    borderColor: colors.border,
   },
   statLabel: {
-    color: '#9C9C9C',
+    color: colors.textSecondary,
     fontSize: 13,
-    marginBottom: 10,
+    marginBottom: spacing.sm,
   },
   statValue: {
-    color: '#FFFFFF',
-    fontSize: 26,
+    color: colors.text,
+    fontSize: 28,
     fontWeight: '800',
+    letterSpacing: -0.4,
   },
   statFoot: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 13,
     fontWeight: '700',
     marginTop: 4,
   },
   sectionTitle: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 22,
     fontWeight: '800',
-    marginTop: 6,
-    marginBottom: 12,
+    marginTop: spacing.xs,
+    marginBottom: spacing.sm,
+    letterSpacing: -0.4,
   },
-  activeWorkoutHomeCard: {
-    backgroundColor: '#121212',
+  card: {
+    backgroundColor: colors.card,
     borderRadius: 24,
-    padding: 18,
+    padding: spacing.lg,
     borderWidth: 1,
-    borderColor: '#222222',
-    marginBottom: 18,
+    borderColor: colors.border,
+    marginBottom: spacing.lg,
   },
   activeWorkoutTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 16,
-    gap: 12,
+    marginBottom: spacing.md,
+    gap: spacing.sm,
   },
   liveBadge: {
-    backgroundColor: '#1A2238',
+    backgroundColor: 'rgba(110,134,188,0.14)',
     borderRadius: 999,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
+    paddingVertical: 7,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(110,134,188,0.25)',
   },
   liveBadgeText: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 11,
     fontWeight: '800',
-  },
-  lastWorkoutCard: {
-    backgroundColor: '#121212',
-    borderRadius: 24,
-    padding: 18,
-    borderWidth: 1,
-    borderColor: '#222222',
-    marginBottom: 18,
+    letterSpacing: 0.8,
   },
   lastWorkoutTop: {
     flexDirection: 'row',
@@ -509,13 +520,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   lastWorkoutTitle: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 18,
     fontWeight: '800',
     marginBottom: 6,
   },
   lastWorkoutDate: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 13,
     fontWeight: '700',
   },
@@ -523,79 +534,74 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 999,
-    backgroundColor: '#6E86BC',
+    backgroundColor: colors.primary,
   },
   badgesRow: {
     flexDirection: 'row',
-    gap: 10,
-    marginTop: 16,
-    marginBottom: 16,
+    gap: spacing.sm,
+    marginTop: spacing.md,
+    marginBottom: spacing.md,
     flexWrap: 'wrap',
   },
   badge: {
-    backgroundColor: '#1A1A1A',
-    borderRadius: 12,
+    backgroundColor: 'rgba(255,255,255,0.03)',
+    borderRadius: 13,
     borderWidth: 1,
-    borderColor: '#2A2A2A',
+    borderColor: colors.border,
     paddingVertical: 8,
     paddingHorizontal: 12,
   },
   badgeText: {
-    color: '#D8D8D8',
+    color: '#DDE3EE',
     fontSize: 13,
     fontWeight: '600',
   },
   secondaryButton: {
-    backgroundColor: '#1A2238',
-    paddingVertical: 14,
-    borderRadius: 14,
+    backgroundColor: 'rgba(110,134,188,0.12)',
+    minHeight: 50,
+    borderRadius: 16,
     alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(110,134,188,0.20)',
   },
   secondaryButtonText: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 14,
     fontWeight: '800',
   },
-  emptyCard: {
-    backgroundColor: '#121212',
-    borderRadius: 24,
-    padding: 18,
-    borderWidth: 1,
-    borderColor: '#222222',
-    marginBottom: 18,
-  },
   emptyTitle: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 18,
     fontWeight: '700',
-    marginBottom: 8,
+    marginBottom: spacing.xs,
   },
   emptyText: {
-    color: '#A8A8A8',
+    color: colors.textSecondary,
     fontSize: 14,
-    lineHeight: 20,
+    lineHeight: 21,
   },
   tipCard: {
     borderRadius: 24,
-    padding: 18,
+    padding: spacing.lg,
     borderWidth: 1,
-    borderColor: 'rgba(142,162,208,0.18)',
+    borderColor: 'rgba(110,134,188,0.18)',
   },
   tipLabel: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 13,
     fontWeight: '700',
-    marginBottom: 8,
+    marginBottom: spacing.xs,
   },
   tipTitle: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 18,
     fontWeight: '800',
-    marginBottom: 8,
+    marginBottom: spacing.xs,
   },
   tipText: {
-    color: '#B8B8B8',
+    color: colors.textSecondary,
     fontSize: 14,
-    lineHeight: 20,
+    lineHeight: 21,
   },
 });

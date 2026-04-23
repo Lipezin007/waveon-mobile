@@ -12,6 +12,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import api from '../../api/axios';
+import { colors } from '../../theme/colors';
+import { spacing } from '../../theme/spacing';
 
 const ACTIVE_WORKOUT_KEY = '@waveon_active_workout';
 
@@ -329,7 +331,7 @@ export default function WorkoutDetailsScreen({ route, navigation }) {
   if (loading || !currentWorkout) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#8EA2D0" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -341,7 +343,7 @@ export default function WorkoutDetailsScreen({ route, navigation }) {
       showsVerticalScrollIndicator={false}
     >
       <LinearGradient
-        colors={['#6E86BC', '#4D618F', '#2A3550']}
+        colors={['#7A91C8', '#5B74AB', '#2F3B58']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.heroCard}
@@ -368,8 +370,12 @@ export default function WorkoutDetailsScreen({ route, navigation }) {
       </LinearGradient>
 
       {!startTime ? (
-        <TouchableOpacity style={styles.startButton} onPress={handleStartWorkout}>
-          <Ionicons name="play" size={18} color="#0A0A0A" />
+        <TouchableOpacity
+          style={styles.startButton}
+          onPress={handleStartWorkout}
+          activeOpacity={0.85}
+        >
+          <Ionicons name="play" size={18} color={colors.background} />
           <Text style={styles.startButtonText}>Start workout</Text>
         </TouchableOpacity>
       ) : (
@@ -390,7 +396,7 @@ export default function WorkoutDetailsScreen({ route, navigation }) {
       {exercises.map((exercise, index) => (
         <View key={exercise.id} style={styles.exerciseCard}>
           <View style={styles.exerciseHeader}>
-            <View>
+            <View style={{ flex: 1 }}>
               <Text style={styles.exerciseIndex}>Exercise {index + 1}</Text>
               <Text style={styles.exerciseName}>{exercise.name}</Text>
             </View>
@@ -406,6 +412,7 @@ export default function WorkoutDetailsScreen({ route, navigation }) {
             <TouchableOpacity
               style={styles.setActionButton}
               onPress={() => handleRemoveSet(exercise.id)}
+              activeOpacity={0.85}
             >
               <Text style={styles.setActionButtonText}>−</Text>
             </TouchableOpacity>
@@ -420,6 +427,7 @@ export default function WorkoutDetailsScreen({ route, navigation }) {
             <TouchableOpacity
               style={[styles.setActionButton, styles.setActionButtonPrimary]}
               onPress={() => handleAddSet(exercise.id)}
+              activeOpacity={0.85}
             >
               <Text
                 style={[
@@ -443,6 +451,7 @@ export default function WorkoutDetailsScreen({ route, navigation }) {
         style={[styles.finishButton, savingWorkout && styles.finishButtonDisabled]}
         onPress={handleFinishWorkout}
         disabled={savingWorkout}
+        activeOpacity={0.85}
       >
         <Text style={styles.finishButtonText}>
           {savingWorkout ? 'Saving...' : 'Finish workout'}
@@ -455,22 +464,22 @@ export default function WorkoutDetailsScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
+    backgroundColor: colors.background,
   },
   content: {
-    padding: 20,
+    padding: spacing.xl,
     paddingBottom: 120,
   },
   loadingContainer: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
+    backgroundColor: colors.background,
     justifyContent: 'center',
     alignItems: 'center',
   },
   heroCard: {
     borderRadius: 28,
-    padding: 22,
-    marginBottom: 18,
+    padding: spacing.lg,
+    marginBottom: spacing.lg,
     overflow: 'hidden',
   },
   heroLabel: {
@@ -485,16 +494,17 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '900',
     marginBottom: 6,
+    letterSpacing: -0.6,
   },
   heroSubtitle: {
     color: 'rgba(255,255,255,0.88)',
     fontSize: 15,
     fontWeight: '600',
-    marginBottom: 18,
+    marginBottom: spacing.lg,
   },
   heroStatsRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: spacing.sm,
   },
   heroStat: {
     flex: 1,
@@ -514,26 +524,28 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   startButton: {
-    backgroundColor: '#8EA2D0',
+    backgroundColor: colors.primary,
     borderRadius: 18,
     paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     gap: 8,
-    marginBottom: 18,
+    marginBottom: spacing.lg,
   },
   startButtonText: {
-    color: '#0A0A0A',
+    color: colors.background,
     fontSize: 15,
     fontWeight: '800',
   },
   activeWorkoutCard: {
-    backgroundColor: '#1A2238',
+    backgroundColor: 'rgba(110,134,188,0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(110,134,188,0.20)',
     borderRadius: 18,
     paddingVertical: 14,
     paddingHorizontal: 16,
-    marginBottom: 18,
+    marginBottom: spacing.lg,
   },
   activeTopRow: {
     flexDirection: 'row',
@@ -548,59 +560,62 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 999,
-    backgroundColor: '#8EA2D0',
+    backgroundColor: colors.primary,
     marginRight: 10,
   },
   activeWorkoutText: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 14,
     fontWeight: '800',
   },
   timerText: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 16,
     fontWeight: '900',
   },
   sectionTitle: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 22,
     fontWeight: '800',
-    marginBottom: 12,
+    marginBottom: spacing.sm,
+    letterSpacing: -0.4,
   },
   exerciseCard: {
-    backgroundColor: '#121212',
+    backgroundColor: colors.card,
     borderRadius: 22,
-    padding: 16,
+    padding: spacing.md,
     borderWidth: 1,
-    borderColor: '#222222',
-    marginBottom: 12,
+    borderColor: colors.border,
+    marginBottom: spacing.sm,
   },
   exerciseHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 12,
-    marginBottom: 16,
+    gap: spacing.sm,
+    marginBottom: spacing.md,
   },
   exerciseIndex: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 12,
     fontWeight: '700',
     marginBottom: 4,
   },
   exerciseName: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 17,
     fontWeight: '800',
   },
   exerciseSetsBadge: {
-    backgroundColor: '#1A2238',
+    backgroundColor: 'rgba(110,134,188,0.12)',
     borderRadius: 12,
     paddingVertical: 8,
     paddingHorizontal: 12,
     alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: 'rgba(110,134,188,0.18)',
   },
   exerciseSetsBadgeText: {
-    color: '#8EA2D0',
+    color: colors.primary,
     fontSize: 12,
     fontWeight: '800',
   },
@@ -612,65 +627,65 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 16,
-    backgroundColor: '#1A1A1A',
+    backgroundColor: 'rgba(255,255,255,0.03)',
     borderWidth: 1,
-    borderColor: '#2A2A2A',
+    borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
   },
   setActionButtonPrimary: {
-    backgroundColor: '#8EA2D0',
-    borderColor: '#8EA2D0',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   setActionButtonText: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 24,
     fontWeight: '800',
   },
   setActionButtonTextPrimary: {
-    color: '#0A0A0A',
+    color: colors.background,
   },
   setCountBox: {
     flex: 1,
-    marginHorizontal: 12,
-    backgroundColor: '#1A1A1A',
+    marginHorizontal: spacing.sm,
+    backgroundColor: 'rgba(255,255,255,0.03)',
     borderWidth: 1,
-    borderColor: '#2A2A2A',
+    borderColor: colors.border,
     borderRadius: 16,
     paddingVertical: 10,
     alignItems: 'center',
   },
   setCountLabel: {
-    color: '#9C9C9C',
+    color: colors.textSecondary,
     fontSize: 12,
     marginBottom: 4,
   },
   setCountValue: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 22,
     fontWeight: '800',
   },
   summaryCard: {
-    backgroundColor: '#121212',
+    backgroundColor: colors.card,
     borderRadius: 22,
-    padding: 18,
+    padding: spacing.lg,
     borderWidth: 1,
-    borderColor: '#222222',
-    marginTop: 8,
-    marginBottom: 16,
+    borderColor: colors.border,
+    marginTop: spacing.xs,
+    marginBottom: spacing.md,
   },
   summaryLabel: {
-    color: '#9C9C9C',
+    color: colors.textSecondary,
     fontSize: 13,
     marginBottom: 8,
   },
   summaryValue: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 30,
     fontWeight: '900',
   },
   finishButton: {
-    backgroundColor: '#6E86BC',
+    backgroundColor: colors.primary,
     borderRadius: 18,
     paddingVertical: 17,
     alignItems: 'center',

@@ -3,19 +3,19 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useContext } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
-import LoginScreen from '../screens/auth/LoginScreen';
+import { LanguageContext } from '../contexts/LanguageContext';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import WorkoutDetailsScreen from '../screens/workouts/WorkoutDetailsScreen';
 import MainTabNavigator from './MainTabNavigator';
 import PaywallScreen from '../screens/paywall/PaywallScreen';
 import CreateWorkoutScreen from '../screens/workouts/CreateWorkoutScreen';
 import SessionDetailsScreen from '../screens/progress/SessionDetailsScreen';
-import { t } from '../i18n';
 
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
   const { user, loading } = useContext(AuthContext);
+  const { t } = useContext(LanguageContext);
 
   if (loading) {
     return (

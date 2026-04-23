@@ -28,8 +28,9 @@ Aplicativo mobile do **LifeUp Life**, uma plataforma gamificada focada em desenv
 
 Clone o repositório:
 
-```bash
+```
 git clone https://github.com/Lipezin007/LevelUp-Life.git
+```
 
 Entre na pasta do mobile:
 
@@ -39,21 +40,24 @@ Instale as dependências:
 
 npm install
 ▶️ Executando o app
+```
 npm start
-
+```
 ou (caso use Expo):
 
 npx expo start
 🔗 Conectando com a API
 
 No código, configure a URL da API:
-
+```
 const API_URL = "http://SEU_IP:3001";
-
+```
 ⚠️ Importante:
 
 Para rodar no celular, use o IP da sua máquina na rede local
+```
 Exemplo: http://192.168.0.10:3001
+```
 📱 Preview
 
 (adicione prints do app aqui depois)

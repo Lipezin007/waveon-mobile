@@ -1,122 +1,148 @@
+# 📱 Waveon Mobile
 
-# 🚀 Waveon API
+Aplicativo mobile da plataforma **Waveon**, desenvolvido para oferecer uma experiência fitness moderna, unindo treinos, progresso e nutrição em um só lugar.
 
-Backend da plataforma **Waveon**, uma aplicação fitness completa focada em treinos, nutrição e acompanhamento de progresso.
-
-Esta API foi desenvolvida para suportar um ambiente real de produção, servindo como base para um app mobile construído em React Native.
-
----
-
-## 🧠 Visão do projeto
-
-A Waveon API centraliza toda a lógica de negócio do sistema, garantindo consistência de dados, segurança e escalabilidade.
-
-O backend foi estruturado para atender um produto real, com foco em:
-
-- organização de código
-- performance
-- facilidade de manutenção
-- evolução contínua do sistema
+O projeto foi construído com foco em **usabilidade**, **design moderno** e **integração com backend próprio**, simulando um produto real pronto para evolução contínua.
 
 ---
 
-## ⚙️ O que essa API resolve
+## ✨ Sobre o projeto
 
-A API permite que usuários autenticados possam:
+O **Waveon Mobile** é a interface principal da plataforma Waveon, permitindo que usuários acompanhem sua rotina fitness de forma prática e intuitiva.
 
-- gerenciar seus treinos personalizados
-- acompanhar sessões e progresso
-- registrar alimentação diária
-- controlar ingestão de água
-- manter histórico estruturado por data
-- sincronizar dados em tempo real com o app
+O app foi pensado para entregar uma experiência fluida no dia a dia, com navegação simples, visual profissional e recursos que ajudam no acompanhamento da evolução física e nutricional.
 
 ---
 
-## 🛠️ Stack utilizada
+## 🎯 Objetivo
 
-- **Node.js**
-- **Express**
-- **MySQL**
-- **JWT (autenticação)**
-- **dotenv**
-- **mysql2**
+O objetivo do app é centralizar funcionalidades importantes de um ecossistema fitness, como:
+
+- acompanhamento de treinos
+- visualização de progresso
+- controle nutricional
+- consumo diário de água
+- organização da rotina do usuário
+
+Além da aplicação prática, o projeto também demonstra domínio em:
+
+- desenvolvimento mobile com React Native
+- organização de telas e componentes
+- integração com API REST
+- gerenciamento de estado
+- construção de interface com foco em experiência do usuário
 
 ---
 
-## 🧩 Arquitetura
+## 🛠️ Tecnologias utilizadas
 
-O projeto segue uma estrutura organizada e modular:
-```
+- **React Native**
+- **Expo**
+- **React Navigation**
+- **Context API**
+- **AsyncStorage**
+- **Axios**
+- **Expo Linear Gradient**
+- **Expo Video**
+- **React Native Safe Area Context**
+
+---
+
+## 🧩 Funcionalidades principais
+
+- autenticação de usuários
+- tela de login com interface moderna
+- home com resumo de atividades
+- gerenciamento de treinos
+- acompanhamento de progresso
+- tela de perfil com edição de informações
+- sistema de idiomas
+- controle nutricional por data
+- registro de refeições
+- edição e remoção de alimentos
+- controle de ingestão de água
+- integração com backend próprio
+
+---
+
+## 🎨 Interface
+
+O app foi desenvolvido com foco em uma interface:
+
+- moderna
+- limpa
+- responsiva
+- visualmente consistente
+- preparada para expansão futura
+
+A identidade visual foi construída para transmitir uma sensação premium e tecnológica, alinhada ao conceito da plataforma Waveon.
+
+---
+
+## 📁 Estrutura do projeto
+
+```bash
 src/
-├── config/ # conexão com banco
-├── controllers/ # regras de negócio
-├── routes/ # definição das rotas
-├── middlewares/ # autenticação e validações
-└── app.js # inicialização da aplicação
+├── api/
+├── components/
+├── contexts/
+├── i18n/
+├── navigation/
+├── screens/
+├── theme/
+└── assets/
 ```
+A estrutura foi organizada para facilitar manutenção, reaproveitamento de código e escalabilidade do projeto.
 
-Essa separação facilita manutenção, testes e escalabilidade.
-
----
-
-## 🔐 Segurança
-
-- autenticação baseada em JWT
-- rotas protegidas por middleware
-- isolamento de dados por usuário
-
----
-
-## 📱 Integração
-
-Essa API foi construída para funcionar integrada com um aplicativo mobile, garantindo:
-
-- comunicação eficiente via REST
-- respostas otimizadas para UI
-- persistência de dados em tempo real
-- suporte a sessões e estado do usuário
-
----
-
-## 🚀 Execução
-
+⚙️ Como executar o projeto
 Instale as dependências:
-
 ```
 npm install
 ```
-Inicie o servidor:
+Inicie o projeto com Expo:
 ```
-npm start
+npx expo start
 ```
-Ambiente de desenvolvimento:
-```
-npx nodemon src/app.js
-```
-💡 Diferenciais
-estrutura pensada para produto real
+🔗 Integração
+O aplicativo se comunica com a Waveon API, que centraliza autenticação, treinos, progresso e nutrição.
 
-backend desacoplado do frontend
+Essa integração permite:
 
-pronto para escalar (novas features, premium, etc)
+sincronização de dados em tempo real
 
-integração completa com app mobile
+persistência de informações do usuário
 
-modelagem de dados voltada para uso contínuo
+organização de dados por sessão e por data
 
-📈 Evolução planejada
+expansão futura para recursos premium
+
+💡 Diferenciais do projeto
+design de app real
+
+integração com backend próprio
+
+arquitetura organizada
+
+suporte a internacionalização
+
+experiência pensada para produto de verdade
+
+base preparada para crescimento
+
+📈 Melhorias futuras
+plano premium completo
+
 metas nutricionais personalizadas
 
-dashboards e analytics
-
-sistema de planos premium
+dashboard com analytics
 
 notificações e lembretes
 
-documentação automática (Swagger)
+sincronização mais avançada com backend
 
-deploy em ambiente cloud
+melhorias de performance
+
+publicação em loja
 
 👨‍💻 Autor
-Desenvolvido por Felippe Pedroso como projeto real e parte do portfólio profissional.
+Desenvolvido por Felippe Pedroso

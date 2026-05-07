@@ -6,6 +6,9 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "automatic",
+    "updates": {
+      "enabled": false
+    },
     "plugins": [
       "expo-video",
       "expo-secure-store"

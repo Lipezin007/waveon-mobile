@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
 import { LanguageContext } from '../contexts/LanguageContext';
+import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import WorkoutDetailsScreen from '../screens/workouts/WorkoutDetailsScreen';
 import MainTabNavigator from './MainTabNavigator';

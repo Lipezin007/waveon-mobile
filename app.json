@@ -7,11 +7,13 @@
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "automatic",
     "updates": {
-      "enabled": false
+      "enabled": false,
+      "checkAutomatically": "NEVER"
     },
     "plugins": [
       "expo-video",
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-font"
     ],
     "splash": {
       "image": "./assets/images/icon.png",

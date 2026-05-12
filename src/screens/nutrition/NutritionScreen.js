@@ -17,7 +17,7 @@ import { colors } from '../../theme/colors';
 import { spacing } from '../../theme/spacing';
 import { LanguageContext } from '../../contexts/LanguageContext';
 
-const INITIAL_WATER_ML = 1250;
+const INITIAL_WATER_ML = 0;
 
 const INITIAL_MEALS = [
   { id: '1', type: 'breakfast', title: 'Breakfast', items: [] },
@@ -80,8 +80,8 @@ export default function NutritionScreen({ navigation }) {
       setLoading(true);
 
       const [foodsResponse, waterResponse] = await Promise.all([
-        api.get(`/nutrition?date=${dateKey}`),
-        api.get(`/nutrition/water?date=${dateKey}`),
+        api.get(`/api/nutrition?date=${dateKey}`),
+        api.get(`/api/nutrition/water?date=${dateKey}`)
       ]);
 
       const foods = Array.isArray(foodsResponse.data) ? foodsResponse.data : [];
@@ -160,7 +160,7 @@ export default function NutritionScreen({ navigation }) {
     try {
       setSavingWater(true);
 
-      await api.put('/nutrition/water', {
+      await api.put('/api/nutrition/water', {
         entry_date: selectedDateKey,
         water_ml: nextWaterMl,
       });
@@ -251,9 +251,9 @@ export default function NutritionScreen({ navigation }) {
       setSavingFood(true);
 
       if (editingFoodId) {
-        await api.put(`/nutrition/foods/${editingFoodId}`, payload);
+        await api.put(`/api/nutrition/foods/${editingFoodId}`, payload);
       } else {
-        await api.post('/nutrition/foods', payload);
+        await api.post('/api/nutrition/foods', payload);
       }
 
       closeFoodModal();
@@ -280,7 +280,7 @@ export default function NutritionScreen({ navigation }) {
           style: 'destructive',
           onPress: async () => {
             try {
-              await api.delete(`/nutrition/foods/${foodId}`);
+              await api.delete(`/api/nutrition/foods/${foodId}`);
               await loadNutritionFromApi(selectedDateKey);
             } catch (error) {
               console.log('DELETE FOOD ERROR:', error?.response?.data || error);
@@ -321,7 +321,7 @@ export default function NutritionScreen({ navigation }) {
           style: 'destructive',
           onPress: async () => {
             try {
-              await api.delete(`/nutrition/reset?date=${selectedDateKey}`);
+              await api.delete(`/api/nutrition/reset?date=${selectedDateKey}`);
               await loadNutritionFromApi(selectedDateKey);
             } catch (error) {
               console.log('RESET NUTRITION ERROR:', error?.response?.data || error);
